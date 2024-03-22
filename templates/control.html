@@ -1,0 +1,122 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+
+<br>
+<br>
+{% if irrigationType == "manual" %}
+<input id="autoIrrigation" type="checkbox" name="switchExample" class="switch">
+<label for="autoIrrigation">Automatic irrigation</label>
+<br>
+<br>
+	{% if irrigationStatus == "on" %}
+	<input id="manualStatus" type="checkbox" name="switchExample" class="switch" checked="checked">
+	<label for="manualStatus">Enable irrigation</label>
+	<br>
+	<br>
+	{% else %}
+	<input id="manualStatus" type="checkbox" name="switchExample" class="switch">
+	<label for="manualStatus">Enable irrigation</label>
+	<br>
+	<br>
+	{% endif %}
+<input class="inputMoisture" type="text" placeholder="Current limit: {{moistureLimit}}">
+<button type="submit">Set</button disabled>
+{% else %}
+<input id="autoIrrigation" type="checkbox" name="switchExample" class="switch" checked="checked">
+<label for="autoIrrigation">Automatic irrigation</label>
+<br>
+<br>
+<input id="manualStatus" type="checkbox" name="switchExample" class="switch" disabled>
+<label for="manualStatus">Enable irrigation</label disabled>
+<br>
+<br>
+<input class="inputMoisture" type="text" placeholder="Current limit: {{moistureLimit}}">
+<button type="submit">Set</button>
+{% endif %}
+
+<br>
+<br>
+<br>
+
+
+<canvas id="temperature-chart" width="800" height="450"></canvas>
+<br>
+
+<canvas id="humidity-chart" width="800" height="450"></canvas>
+<br>
+
+<canvas id="moisture-chart" width="800" height="450"></canvas>
+<br>
+
+<script type="text/javascript">
+	
+new Chart(document.getElementById("temperature-chart"), {
+	  type: 'line',
+	  data: {
+	    labels: [
+	    	{% for item in data %}
+	           "{{ item["time"] }}",
+	        {% endfor %}
+	    ],
+	    datasets: [{ 
+	        data: [
+	        	{% for item in data %}
+	           		"{{ item["temperature"] }}",
+	        	{% endfor %}
+	        ],
+	        label: "Temperature",
+	        borderColor: "#D66853",
+	        fill: true
+	      },
+	    ]
+	  },
+});
+
+new Chart(document.getElementById("humidity-chart"), {
+	  type: 'line',
+	  data: {
+	    labels: [
+	    	{% for item in data %}
+	           "{{ item["time"] }}",
+	        {% endfor %}
+	    ],
+	    datasets: [{ 
+	        data: [
+	        	{% for item in data %}
+	           		"{{ item["humidity"] }}",
+	        	{% endfor %}
+	        ],
+	        label: "Humidity",
+	        borderColor: "#3e95cd",
+	        fill: true
+	      },
+	    ]
+	  },
+});
+
+new Chart(document.getElementById("moisture-chart"), {
+	  type: 'line',
+	  data: {
+	    labels: [
+	    	{% for item in data %}
+	           "{{ item["time"] }}",
+	        {% endfor %}
+	    ],
+	    datasets: [{ 
+	        data: [
+	        	{% for item in data %}
+	           		"{{ item["moisture"] }}",
+	        	{% endfor %}
+	        ],
+	        label: "Moisture",
+	        borderColor: "#364156",
+	        fill: true
+	      },
+	    ]
+	  },
+	  
+});
+</script>
+{% endblock %}
